@@ -1,27 +1,40 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package cz.crawler;
+
+import cz.crawler.gui.MainFrame;
 
 /**
  *
- * @author martyidapple
+ * @author marty
  */
-public class Starter {
+public class Starter implements Runnable {
 
-    public Starter() {
-    Crawler crawler =  Crawler.getInstance();
-    crawler.start();
-    
+    private String startWithGui = "-gui";
+    private boolean IS_WITH_GUI = false;
+
+    public Starter(String[] arg) {
+        for (int i = 0; i < arg.length; i++) {
+            if (startWithGui.equals(arg[i].toLowerCase())) {
+                IS_WITH_GUI = true;
+            }
+        }
     }
-    
-    
-    /**
-     * @param args the command line arguments
-     */
+
+    @Override
+    public void run() {
+        if (IS_WITH_GUI) {
+            MainFrame mainFrame = new MainFrame();
+            mainFrame.setVisible(true);
+        } else {
+            Crawler crawler = Crawler.getInstance();
+            crawler.start();
+        }
+    }
+
     public static void main(String[] args) {
-      new Starter();
-      
+
+        Starter starter = new Starter(args);
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(starter);
+
     }
 }

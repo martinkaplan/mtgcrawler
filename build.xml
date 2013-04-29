@@ -11,8 +11,9 @@
     <description>Builds, tests, and runs the project Crawler.</description>
     <import file="nbproject/build-impl.xml"/>
      <target name="-post-jar">
-            <copy file="config.properties" todir="${dist.jar.dir}"/>
-     </target>
+          <copy file="config.properties" todir="${dist.jar.dir}"/>
+          <copy file="start.bat" todir="${dist.jar.dir}"/>  
+     </target>    
     <!--
 
     There exist several targets which are by default empty and which can be 

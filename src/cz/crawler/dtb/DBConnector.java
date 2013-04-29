@@ -13,16 +13,10 @@ public class DBConnector {
     protected static final Logger logger = Logger.getLogger(DBConnector.class);
     private static DBConnector instance = null;
     private Connection conn = null;
-    /* Seznam statementu ... pri pridani dalsiho pridat do prepare a co clear ! */
     private PreparedStatement isAlive;
     private PreparedStatement insertCard;
     public static final String DB_CLASS = "com.mysql.jdbc.Driver";
 
-    /**
-     * Třída je singleton, proto tahle metoda
-     *
-     * @return vrati instanci připojeni k databazi
-     */
     public static synchronized DBConnector getInstance() {
         if (instance == null) {
             instance = new DBConnector();

@@ -1,24 +1,16 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/*
- * MainFrame.java
- *
- * Created on 12.1.2013, 22:00:21
- */
 package cz.crawler.gui;
 
 import cz.crawler.Crawler;
 import cz.crawler.ProjectProperties;
 import cz.crawler.dtb.DBConnector;
+import cz.crawler.dtb.entity.MtgCard;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.sql.SQLException;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -34,8 +26,6 @@ public class MainFrame extends javax.swing.JFrame implements ActionListener, Win
     DBConnector dbconn = DBConnector.getInstance();
     Timer timer;
     ProjectProperties prop = ProjectProperties.getInstance();
-    private final static int MAX_UNIVERSE_ID = 273562;
-    
 
     private void applicationExit() {
         prop.store();
@@ -44,30 +34,29 @@ public class MainFrame extends javax.swing.JFrame implements ActionListener, Win
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        System.out.println("aaaaa");
     }
 
     class RemindTask extends TimerTask {
 
         public void run() {
-
-            int pom = Integer.parseInt(jTextFieldMultiverseId.getText());
-            pom++;
-
-            prop.setIntProperty(ProjectProperties.I_LASTCARDID, pom);
-            jTextFieldMultiverseId.setText("" + pom);
-            
-            if(MAX_UNIVERSE_ID < pom){
-                System.out.println("Maximalni universe ID !! "+ pom);
-                applicationExit();
-            }
-            jButton1ActionPerformed(null);
-
-            jButtonSaveToDtbActionPerformed(null);
+//
+//            int pom = Integer.parseInt(jTextFieldMultiverseId.getText());
+//            pom++;
+//
+//            prop.setIntProperty(ProjectProperties.I_LASTCARDID, pom);
+//            jTextFieldMultiverseId.setText("" + pom);
+//
+//            if (MAX_UNIVERSE_ID < pom) {
+//                System.out.println("Maximalni universe ID !! " + pom);
+//                applicationExit();
+//            }
+//            jButtonSetCardActionPerformed(null);
+//
+//            jButtonSaveToDtbActionPerformed(null);
             jLabelDtbState.setText("" + dbconn.isAlive());
         }
     }
-
     /**
      * Creates new form MainFrame
      */
@@ -76,12 +65,10 @@ public class MainFrame extends javax.swing.JFrame implements ActionListener, Win
         jPanelCard.add(pm, BorderLayout.CENTER);
         setSize(dim);
         setPreferredSize(dim);
-        jTextFieldMultiverseId.setText(prop.getIntProperty(ProjectProperties.I_LASTCARDID)+"");
-        
+        jTextFieldMultiverseId.setText(prop.getIntProperty(ProjectProperties.I_LASTCARDID) + "");
+
         timer = new Timer();
         timer.scheduleAtFixedRate(new RemindTask(), 3000, 3000);
-        
-
     }
 
     @SuppressWarnings("unchecked")
@@ -92,7 +79,7 @@ public class MainFrame extends javax.swing.JFrame implements ActionListener, Win
         jPanel2 = new javax.swing.JPanel();
         jPanelUpper = new javax.swing.JPanel();
         jTextFieldMultiverseId = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        jButtonSetCard = new javax.swing.JButton();
         jButtonSaveToDtb = new javax.swing.JButton();
         jPanelLowwer = new javax.swing.JPanel();
         jButtonExit = new javax.swing.JButton();
@@ -108,10 +95,10 @@ public class MainFrame extends javax.swing.JFrame implements ActionListener, Win
 
         jTextFieldMultiverseId.setText("1");
 
-        jButton1.setText("Nastav");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        jButtonSetCard.setText("Nastav");
+        jButtonSetCard.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                jButtonSetCardActionPerformed(evt);
             }
         });
 
@@ -132,20 +119,20 @@ public class MainFrame extends javax.swing.JFrame implements ActionListener, Win
                     .addContainerGap()
                     .addComponent(jTextFieldMultiverseId, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(jButton1)
+                    .addComponent(jButtonSetCard)
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                     .addComponent(jButtonSaveToDtb)
-                    .addContainerGap(123, Short.MAX_VALUE)))
+                    .addContainerGap(176, Short.MAX_VALUE)))
         );
         jPanelUpperLayout.setVerticalGroup(
             jPanelUpperLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 47, Short.MAX_VALUE)
+            .addGap(0, 51, Short.MAX_VALUE)
             .addGroup(jPanelUpperLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelUpperLayout.createSequentialGroup()
-                    .addContainerGap(11, Short.MAX_VALUE)
+                    .addContainerGap(17, Short.MAX_VALUE)
                     .addGroup(jPanelUpperLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jTextFieldMultiverseId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jButton1)
+                        .addComponent(jButtonSetCard)
                         .addComponent(jButtonSaveToDtb))
                     .addContainerGap()))
         );
@@ -172,7 +159,7 @@ public class MainFrame extends javax.swing.JFrame implements ActionListener, Win
                 .addComponent(jLabel1)
                 .addGap(45, 45, 45)
                 .addComponent(jLabelDtbState)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 233, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 263, Short.MAX_VALUE)
                 .addComponent(jButtonExit)
                 .addContainerGap())
         );
@@ -198,20 +185,24 @@ private void jButtonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
     applicationExit();
 }//GEN-LAST:event_jButtonExitActionPerformed
 
-private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-//   try{ pm.setCard(crawler.getCard(Integer.parseInt(jTextFieldMultiverseId.getText().trim())));
-//   }catch(Exception e){}
-}//GEN-LAST:event_jButton1ActionPerformed
+private void jButtonSetCardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSetCardActionPerformed
+    try {
+        pm.setCard(MtgCard.getCard(Integer.parseInt(jTextFieldMultiverseId.getText().trim())));
+    } catch (Exception e) {
+    }
+}//GEN-LAST:event_jButtonSetCardActionPerformed
 
     private void jButtonSaveToDtbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSaveToDtbActionPerformed
-      //  dbconn.insertCard(pm.getCard());
+        try {
+            dbconn.insertCard(pm.getCard());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }//GEN-LAST:event_jButtonSaveToDtbActionPerformed
-
-   
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButtonExit;
     private javax.swing.JButton jButtonSaveToDtb;
+    private javax.swing.JButton jButtonSetCard;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabelDtbState;
     private javax.swing.JPanel jPanel2;

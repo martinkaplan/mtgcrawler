@@ -1,6 +1,7 @@
 package cz.crawler.dtb.entity;
 
 import cz.crawler.LandList;
+import java.net.SocketTimeoutException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
@@ -52,14 +53,26 @@ public class MtgCard {
         this.imageUrl = "http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=" + multiverId + "&type=card";
     }
 
-    public static MtgCard getCard(int multiverseId) {
-        MtgCard karta;
+    private static Document askForPage(int multiverseId) throws Exception {
         try {
-            Document doc = Jsoup.connect("http://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=" + multiverseId).get();
+            Document doc = Jsoup.connect("http://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=" + multiverseId).timeout(4000).get();
+            return doc;
+        } catch (SocketTimeoutException e) {
+            System.out.println("Sockettimetout ex - calling yourselfs again");
+            return askForPage(multiverseId);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
 
+    public static MtgCard getCard(int multiverseId) throws Exception {
+        MtgCard karta;
+        Document doc;
+        try {
+            doc = askForPage(multiverseId);
             karta = new MtgCard(multiverseId,
                     doc.select("#ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_nameRow").select(".value").text(),
-                   LandList.resolveManaCost(doc.select("#ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_manaRow").select(".value").toString()),
+                    LandList.resolveManaCost(doc.select("#ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_manaRow").select(".value").toString()),
                     doc.select("#ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_cmcRow").select(".value").text(),
                     doc.select("#ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_typeRow").select(".value").text(),
                     doc.select("#ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_textRow").select(".value").select(".cardtextbox").text(),
@@ -67,11 +80,11 @@ public class MtgCard {
                     doc.select("#ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_currentSetSymbol").select("a").text(),
                     doc.select("#ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_rarityRow").select(".value").text(),
                     doc.select("#ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_artistRow").select(".value").text());
+
+            return karta;
         } catch (Exception e) {
-            e.printStackTrace();
-            karta = null;
+            throw e;
         }
-        return karta;
     }
 
     public int getMultiverId() {
@@ -131,5 +144,5 @@ public class MtgCard {
         } catch (Exception e) {
             return 0;
         }
-    }   
+    }
 }
